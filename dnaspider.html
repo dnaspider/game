@@ -1,0 +1,351 @@
+<!-- @dnaspider -->
+<style>
+    * {
+        background-color: black;
+        color: slategrey;
+        font-size: 120%;
+        cursor: pointer;
+    }
+
+    #alien {
+        position: absolute;
+        z-index: 1;
+        left: 0px;
+        background: transparent;
+        text-shadow: ;
+    }
+
+    #coin {
+        position: absolute;
+        z-index: 1;
+        left: 300px;
+        background: transparent;
+        text-shadow: 0 4px 18px #C8C8C8;
+    }
+
+    #sword {
+        position: absolute;
+        left: 500px;
+        top: 20px;
+        width: ;
+        transform: rotate(20deg);
+        z-index: 1;
+        background: transparent;
+        display: none;
+    }
+
+    #plank,
+    #plankR {
+        position: absolute;
+        border-bottom: 3px dotted silver;
+        width: 100%;
+        top: 3px;
+        z-index: 1;
+        background: transparent;
+        left: 0px;
+    }
+
+    #plankR {
+        left: 501px;
+        width: 60px;
+    }
+
+    #plankFloor {
+        /* box-shadow: 0 18px 20px #C8C8C8; */
+        background: transparent;
+        position: absolute;
+        top: 60px;
+        left: -18px;
+        z-index: 2;
+        transform: rotate(180deg);
+        width: 110%;
+        cursor: default;
+    }
+
+    #ctrls {
+        top: 85px;
+        background: transparent;
+        position: fixed;
+        color: lime;
+        /* border: 1px solid rgb(150, 106, 106); */
+        box-shadow: 0 4px 18px #C8C8C8;
+        padding: 10px;
+        border-radius: 9px;
+        width: 200px;
+        overflow: hidden;
+        text-align: center;
+        height: 265px;
+    }
+
+    #ctrls>div {
+        background: transparent;
+        color: red;
+        width: 60px;
+        text-align: center;
+        border: 1px solid transparent;
+        margin: 0px auto;
+    }
+
+    #up {
+        position: relative;
+        top: -250px
+    }
+
+    #down {
+        position: relative;
+        top: -192px
+    }
+
+    #left {
+        position: relative;
+        left: -60px;
+        top: -22px;
+    }
+
+    #right {
+        position: relative;
+        left: 57px;
+        top: -100px;
+    }
+
+    #clearBtn {
+        position: relative;
+        left: 0px;
+        top: 52px;
+        background: transparent;
+    }
+
+    div#scoreBoard {
+        position: relative;
+        top: -210px;
+        left: -60px;
+        width: 10px;
+        color: lime;
+        text-shadow: 0 4px 18px #C8C8C8;
+    }
+
+    #tree,
+    #_tree {
+        position: absolute;
+        top: 0px;
+        left: 500px;
+        font-size: 130%;
+        background: transparent;
+        z-index: 1;
+        display: none;
+    }
+
+    #_tree {
+        left: 460px;
+        z-index: 0;
+        font-size: 200%;
+        top: -34px;
+    }
+
+    #cres {
+        position: absolute;
+        top: 0px;
+        left: 537px;
+        font-size: 17%;
+        background: transparent;
+        z-index: 0;
+    }
+
+    #port {
+        position: absolute;
+        top: -50px;
+        left: 450px;
+        font-size: 330%;
+        background: transparent;
+        z-index: 0;
+        transform: rotate(270deg);
+        color: lime;
+        color: rgba(00, 100, 00, .10);
+        text-shadow: 0 4px 18px #C8C8C8;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/6.1.19/browser.min.js"></script>
+<!-- <script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel.js"></script> -->
+
+<script type="text/babel">
+    class App extends React.Component{
+        
+        state={height:680,start:false,speed:0,plankWidth:'500px',score:0,rotate:0,coinTop:0,coinLeft:77,alienTop:0,x:0,s:'',}
+        
+        clear = () => {
+            clearInterval(this.timer)
+            this.setState(state=>({
+                //score:0,
+                start:false,
+                coinTop:0,
+                alienTop:(this.state.alienTop<-64||this.state.alienTop>this.state.height||this.state.alienTop>0)?0:this.state.alienTop,
+                rotate:0,})
+            //,()=>
+            )
+            this.reSpawnCoin()
+            this.plank.style=`borderColor:silver;width:${this.state.plankWidth};`
+        }
+
+        tick = () => {
+            this.setState(state=>({start:true}))
+            clearInterval(this.timer)
+            this.timer=setInterval(()=>this.setState(state=>({rotate:this.state.rotate+1,coinTop:+this.coin.style.top.replace('px','')+1,alienTop:+this.alien.style.top.replace('px','')+1}),
+            (this.state.alienTop>this.state.height)?this.clear():null,
+            ),this.state.speed)
+        }
+
+        rand = () => {
+            return Math.floor(Math.random() * this.state.plankWidth.replace('px',''))
+        }
+
+        reSpawnCoin = () => {
+            // console.log(this.coin.innerText=this.coin.innerHTML))
+
+            this.setState(state=>({
+                coinLeft:+this.rand(),
+                rotate:this.state.rotate==0?-1:0,
+            })
+            //,()=>this.coin.style.left=`${this.state.coinLeft}px`
+            ,(this.state.score>=25)?this.showSword():null
+            )
+            // if (this.state.score>35){
+            //     // this.plankFloor.style.display='block'
+            //     // this.plankFloor.boxShadow='0 18px 25px #C8C8C8'
+            //     this.plank.style.borderBottom=''
+            // }else{
+            //     // this.plankFloor.boxShadow='0 0px 0px transparent'
+            //     this.plank.style.borderBottom='3px dotted silver'
+            //     // this.plankFloor.style.display='none';
+            // }
+            
+        }
+
+        showSword = () => {
+            (this.state.score>=25)?this.sword.style.display='block':null
+        }
+
+        clearPlank = () => {
+            this.plankFloor.style.display='none'
+            // this.sword.style.display='block'?this.sword.style.display='none':null
+            this.plank.style=`border: 3px dotted transparent;width:${this.state.plankWidth};`
+            this.tick()
+        }
+        
+        ctrls = (event) => {
+            this.setState({s:event.target.innerHTML},console.log(event.target.innerHTML))
+        }
+    
+        coinUp = () => {
+            this.setState(state=>({coinLeft:-100,score:(this.state.coinTop>60)?this.state.score+5:this.state.score+1})
+            ,)
+        }
+
+        ifCoin = () =>{
+            //cp score +5
+            for (let i = 0; i < 51; i++) {
+                ((this.state.start)?this.state.x-i:this.state.x)== this.state.coinLeft&& this.state.alienTop==this.state.coinTop?this.coinUp():null;
+                ((this.state.start)?this.state.x-i:this.state.x)== this.state.coinLeft&& this.state.alienTop-i==this.state.coinTop?this.coinUp():null;
+                ((this.state.start)?this.state.x-i:this.state.x)== this.state.coinLeft&& this.state.alienTop+i==this.state.coinTop?this.coinUp():null;
+            }
+        }
+
+        right = () => {
+            //coin
+            this.ifCoin()
+            
+            if (this.state.x>this.state.plankWidth.replace('px','')) {
+                //rightMorf -65
+                this.setState(state=>({x:-65}),()=>this.alien.style.left=this.state.x); 
+            } else {
+                //--> +10
+                this.setState(state=>({x:(!this.state.start)?  (this.state.score==0)?this.state.x+1:  this.state.x+this.state.score:this.state.x+10 }),()=>this.alien.style.left=this.state.x,)
+            }
+        }
+
+        left = () => {
+            //coin
+            this.ifCoin()
+            
+            if (this.state.x<-65){
+                //leftMorf
+                this.setState(state=>({x:this.state.plankWidth.replace('px','')}),()=>this.alien.style.left=this.state.x);
+            }else{
+                //<-- -1
+                this.setState(state=>({x:(!this.state.start)?this.state.x-1:this.state.x-10 }),()=>this.alien.style.left=this.state.x,)//()=>this.sword.style.left=`${this.state.x}px`
+            }
+        }
+
+        down = () => {
+            if (this.state.alienTop>=1 && !this.state.start){
+                this.setState(state=>({alienTop:0}),()=>this.alien.style.top='0px')
+            }else{
+                this.setState(state=>({alienTop:this.state.alienTop+1 }),()=>this.alien.style.top=`${this.state.alienTop}px`)
+            }
+        }
+        
+        up = () => {
+            if (this.state.alienTop<-64 && !this.state.start){
+            }else{
+            this.setState(state=>({alienTop:this.state.alienTop-1 }),()=>this.alien.style.top=`${this.state.alienTop}px`)
+            }        
+        }
+
+        test = () => {
+            console.log('test')
+        }
+
+        render() {
+            const{clear,tick,clearPlank}=this
+            const{rotate,coinTop,y,alienTop,plankWidth,score}=this.state    
+        
+            const coinStyle={
+                style:{
+                    top:`${coinTop}px`,
+                    transform:`rotate(${rotate}deg)`,
+                    left:`${this.state.coinLeft}`
+                }
+            }
+            const alienStyle={
+                style:{
+                    top:`${alienTop}px`,
+                    transform:`rotate(${rotate}deg)`,
+                },
+            }
+
+            return(
+                <div>
+                    <div id="sword" ref={(n,_='🗝💣🏹',__='💻🌲🌙🌠☄⭐💧🕳💭')=>(this.sword = n)}>🗡</div>
+                    <div id='coin' {...coinStyle} ref={n=>(this.coin = n)} >💰</div>
+                    <div id="plank" style={{width:plankWidth}} title="Click Me" ref={n=>(this.plank = n)} onClick={clearPlank}>&nbsp;</div>
+                    <div id="plankR" onClick={clearPlank}>&nbsp;</div>
+                    <div id="plankFloor" ref={n=>(this.plankFloor = n)} >&nbsp;</div>
+                    <div id="alien" {...alienStyle} ref={n=>(this.alien = n)} onClick={clearPlank} title={!alienTop?'Click to start':''}>👾</div>
+
+                    <div id="ctrls" onMouseDown={this.ctrls}>
+                        <div id="clearBtn" onClick={clear} title={!alienTop?'':'Clear'}>👌</div>
+                        <div id="left" onMouseMove={this.left} onMouseDown={this.left}>⬅</div>
+                        <div id="right" onMouseMove={this.right} onMouseDown={this.right}>➡</div>
+                        <div id="up" onMouseMove={this.up} onMouseDown={this.up}>⬆</div>
+                        <div id="down" onMouseMove={this.down} onMouseDown={this.down}>⬇</div>
+                        <div id="scoreBoard">💰:{this.state.score} </div>
+                    </div>
+                    
+                    <div id="port">🕳</div>
+                    <div id="cres">🌙</div>
+                    <div id="tree">🌲</div>
+                    <div id="_tree">🌲</div>
+                </div>
+            )
+        }
+
+    }
+
+    ReactDOM.render(<div className='d'><App /></div>,document.getElementById('root'))
+</script>
+
+<div id="root"></div>
