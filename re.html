@@ -1,0 +1,96 @@
+<!-- @dnaspider -->
+
+<style>
+    * {
+        background: transparent;
+    }
+
+    body {
+        background: black;
+        color: lime;
+        margin: 0px auto;
+        cursor: pointer;
+    }
+
+    #alien {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        text-shadow: 0 0px 18px #00ff00;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+<!-- <script src="./react.development.js"></script>
+<script src="./react-dom.development.js"></script>
+<script src="./babel.js"></script> -->
+
+
+<script type="text/babel">
+    class App extends React.Component{
+        state={left:10,top:10,rotate:0}
+        constructor(props){
+            super(props)
+            this.handleKey=this.handleKey.bind(this)
+        }
+
+        handleKey(e){
+            // console.log(e.keyCode)
+
+            if (e.keyCode==37){//left
+                this.setState(state=>({left:this.state.left-1})
+                )
+            }
+            if (e.keyCode==38){//up
+                this.setState(state=>({top:this.state.top-1})
+                )
+            }
+            if (e.keyCode==39){//right
+                this.setState(state=>({left:this.state.left+1})
+                )
+            }
+            if (e.keyCode==40){//down
+                this.setState(state=>({top:this.state.top+1})
+                )
+            }
+        } 
+
+        componentDidMount(){
+            document.addEventListener("keydown", this.handleKey, false);
+        }
+        componentWillUnmount(){
+            document.removeEventListener("keydown", this.handleKey, false);
+        }
+
+        tick = () => {
+            clearInterval(this.timer)
+            this.timer=setInterval(()=>this.setState(state=>({rotate:this.state.rotate+1,top:this.state.top+1})),0)
+        }
+
+        render() {
+            const {top,left,rotate}=this.state
+            const {tick,handleKey}=this
+
+            const alien={
+                style:{
+                    left:`${left}`,
+                    top:`${top}px`,
+                    transform:`rotate(${rotate}deg)`,
+                },
+                id:'alien',
+                onClick:tick,
+                onKeyPress:handleKey,
+            }
+
+            return(
+                <div {...alien} ref={n=>(this.alien = n)}>👽</div>
+            )
+        }
+    }
+
+    ReactDOM.render(<App/>,document.getElementById('root'))
+</script>
+
+<div id="root"></div>
