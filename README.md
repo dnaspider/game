@@ -1,4 +1,4 @@
-# dnaspider game
+# dnaspider / game
 
 ## Installing
 Download html file and open in Chrome browser
