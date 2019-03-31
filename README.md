@@ -1,8 +1,9 @@
 # dnaspider / game
 
-## Installing
-Download html file and open in Chrome browser
+## Opening
+[dnaspider.html](https://raw.githubusercontent.com/dnaspider/game/master/dnaspider.html)<br>
+[re.html](https://raw.githubusercontent.com/dnaspider/game/master/re.html)<br>
+Save link as .html file and open in Chrome browser
 
 ## Source
-Visual Studio Code
-
+Open with Visual Studio Code
